@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +36,24 @@ class PhoneFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_phone, container, false)
+
+        val view = inflater.inflate(R.layout.fragment_phone, container, false)
+        val rv_board = view.findViewById<RecyclerView>(R.id.rv_board)
+        //rv_board.layoutManager = LinearLayoutManager(context)
+        val itemList = ArrayList<BoardItem>()
+        
+        itemList.add(BoardItem("13:00", "월급 두배로 받는 법", "김XX"))
+        itemList.add(BoardItem("11:00", "학점 A+ 받는 법", "이XX"))
+        itemList.add(BoardItem("10:00", "구글 면접 질문에 대답하는 법", "박XX"))
+        itemList.add(BoardItem("08:00", "공부 잘 하는 MBTI 순위", "최XX"))
+
+        val boardAdapter = BoardAdapter(itemList)
+        rv_board.adapter = boardAdapter
+        rv_board.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+        
+        
+        return view
     }
 
     companion object {
