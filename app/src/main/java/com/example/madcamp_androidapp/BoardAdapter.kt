@@ -16,11 +16,10 @@ class BoardAdapter(val itemList: ArrayList<BoardItem>) :
     }
 
     override fun onBindViewHolder(holder: BoardViewHolder, position: Int) {
-        holder.tv_time.text = itemList[position].time
-        holder.tv_title.text = itemList[position].title
         holder.tv_name.text = itemList[position].name
+        holder.tv_num.text = itemList[position].num
 
-        Log.w("Check", holder.tv_title.text.toString())
+        Log.w("Check", holder.tv_name.text.toString())
     }
 
     override fun getItemCount(): Int {
@@ -28,8 +27,7 @@ class BoardAdapter(val itemList: ArrayList<BoardItem>) :
     }
 
     inner class BoardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tv_time = itemView.findViewById<TextView>(R.id.tv_time)
-        val tv_title = itemView.findViewById<TextView>(R.id.tv_title)
         val tv_name = itemView.findViewById<TextView>(R.id.tv_name)
+        val tv_num = itemView.findViewById<TextView>(R.id.tv_num)
     }
         }

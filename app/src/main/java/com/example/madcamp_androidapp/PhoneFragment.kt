@@ -42,16 +42,41 @@ class PhoneFragment : Fragment() {
         //rv_board.layoutManager = LinearLayoutManager(context)
         val itemList = ArrayList<BoardItem>()
         
-        itemList.add(BoardItem("13:00", "월급 두배로 받는 법", "김XX"))
-        itemList.add(BoardItem("11:00", "학점 A+ 받는 법", "이XX"))
-        itemList.add(BoardItem("10:00", "구글 면접 질문에 대답하는 법", "박XX"))
-        itemList.add(BoardItem("08:00", "공부 잘 하는 MBTI 순위", "최XX"))
+        itemList.add(BoardItem("김가현", "010-0000-0000"))
+        itemList.add(BoardItem("임나현", "010-1111-1111"))
+        itemList.add(BoardItem("박다현", "010-2222-2222"))
+        itemList.add(BoardItem("송라현", "010-3333-3333"))
+        itemList.add(BoardItem("최마현", "010-4444-4444"))
+        itemList.add(BoardItem("이바현", "010-5555-5555"))
+        itemList.add(BoardItem("옹사현", "010-6666-6666"))
+        itemList.add(BoardItem("차아현", "010-7777-7777"))
+        itemList.add(BoardItem("강자현", "010-8888-8888"))
+        itemList.add(BoardItem("현차현", "010-9999-9999"))
+        itemList.add(BoardItem("장카현", "010-1234-5678"))
+        itemList.add(BoardItem("하타현", "010-9876-5432"))
+        itemList.add(BoardItem("마파현", "010-1213-1415"))
+        itemList.add(BoardItem("정하현", "010-1617-1819"))
+        itemList.add(BoardItem("김가현", "010-0000-0000"))
+        itemList.add(BoardItem("임나현", "010-1111-1111"))
+        itemList.add(BoardItem("박다현", "010-2222-2222"))
+        itemList.add(BoardItem("송라현", "010-3333-3333"))
+        itemList.add(BoardItem("최마현", "010-4444-4444"))
+        itemList.add(BoardItem("이바현", "010-5555-5555"))
+        itemList.add(BoardItem("옹사현", "010-6666-6666"))
+        itemList.add(BoardItem("차아현", "010-7777-7777"))
+        itemList.add(BoardItem("강자현", "010-8888-8888"))
+        itemList.add(BoardItem("현차현", "010-9999-9999"))
+        itemList.add(BoardItem("장카현", "010-1234-5678"))
+        itemList.add(BoardItem("하타현", "010-9876-5432"))
+        itemList.add(BoardItem("마파현", "010-1213-1415"))
+        itemList.add(BoardItem("정하현", "010-1617-1819"))
+        // 여기서 문제. 장카현 아래로는 스크롤이 안된다. 이건 constraint의 문제인가?
+        // 네비게이션 바로 가려져서 그런건가? 음 그것도 아닌 것 같기도 하고... 나중에 해결하자
 
         val boardAdapter = BoardAdapter(itemList)
         rv_board.adapter = boardAdapter
         rv_board.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        
         
         return view
     }
