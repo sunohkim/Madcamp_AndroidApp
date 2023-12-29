@@ -76,6 +76,5 @@ class MainActivity : AppCompatActivity() {
         }
 
         fragTransaction.commitAllowingStateLoss()
-        //abc
     }
 }
