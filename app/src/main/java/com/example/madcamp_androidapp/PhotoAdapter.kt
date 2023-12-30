@@ -12,10 +12,10 @@ import com.bumptech.glide.Glide
 class PhotoAdapter(private val photoList: List<Photo>): RecyclerView.Adapter<PhotoAdapter.ViewHolder>() {
 
     class ViewHolder(private val binding: ItemPhotoBinding) : RecyclerView.ViewHolder(binding.root) {
+        // 각 이미지 URI 정보를 바탕으로 이미지 출력
         fun bind(photo: Photo) {
-            Log.w("glide: ", photo.imageUri)
             Glide.with(binding.root.context)
-                .load(photo.imageUri)
+                .load(photo.imageURI)
                 .fitCenter()
                 .into(binding.photoImageView)
         }
@@ -32,7 +32,7 @@ class PhotoAdapter(private val photoList: List<Photo>): RecyclerView.Adapter<Pho
         val photo = photoList[position]
         holder.bind(photo)
 
-        // 이미지를 클릭했을 때의 동작
+        // 이미지를 클릭했을 때의 동작 (이미지 크게 보기)
         holder.itemView.setOnClickListener {
             val builder = AlertDialog.Builder(holder.itemView.context)
             val inflater = LayoutInflater.from(holder.itemView.context)
@@ -40,11 +40,11 @@ class PhotoAdapter(private val photoList: List<Photo>): RecyclerView.Adapter<Pho
             val imageView = view.findViewById<ImageView>(R.id.dialogImageView)
 
             Glide.with(holder.itemView.context)
-                .load(photo.imageUri)
+                .load(photo.imageURI)
                 .into(imageView)
 
-            // '닫기' 버튼을 추가했더니 예쁘지 않아서 주석처리함
             builder.setView(view)
+                // '닫기' 버튼을 누르면 dialog 종료
                 .setPositiveButton("닫기") { dialog, _ ->
                     dialog.dismiss()
                 }

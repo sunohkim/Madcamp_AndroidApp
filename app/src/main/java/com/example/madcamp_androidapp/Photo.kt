@@ -1,3 +1,3 @@
 package com.example.madcamp_androidapp
 
-data class Photo(val imageUri: String)
+data class Photo(val imageURI: String)
