@@ -2,6 +2,7 @@ package com.example.madcamp_androidapp
 
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -62,6 +63,7 @@ class GalleryFragment : Fragment() {
                 null,
                 null
             )
+            Log.w("check1", "ch1")
 
             cursor?.use {
                 // 이미지의 id, 이름 정보는 이미지 생성과 관련 없으므로 주석 처리 함.
@@ -78,6 +80,7 @@ class GalleryFragment : Fragment() {
                     imageList.add(Photo(path))
                 }
             }
+            Log.w("check2", "ch2")
             // 3개의 recyclerView를 선언
             val recyclerView1 = binding.recyclerView1
             val layoutManager1 = LinearLayoutManager(requireContext())
