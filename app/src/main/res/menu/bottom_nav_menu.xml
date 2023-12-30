@@ -3,16 +3,13 @@
 
     <item
         android:id="@+id/navigation_phone"
-        android:icon="@drawable/ic_phone_black_24dp"
-        android:title="Phone" />
+        android:icon="@drawable/ic_phone_black_24dp" />
 
     <item
         android:id="@+id/navigation_gallery"
-        android:icon="@drawable/ic_gallery_black_24dp"
-        android:title="Gallery" />
+        android:icon="@drawable/ic_gallery_black_24dp" />
 
     <item
         android:id="@+id/navigation_game"
-        android:icon="@drawable/ic_game_black_24dp"
-        android:title="Game" />
+        android:icon="@drawable/ic_game_black_24dp" />
 </menu>
