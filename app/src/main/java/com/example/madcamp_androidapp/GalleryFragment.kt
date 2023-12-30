@@ -1,8 +1,7 @@
 package com.example.madcamp_androidapp
 
-import android.app.Instrumentation.ActivityResult
 import android.os.Bundle
-import android.util.Log
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,20 +10,20 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.madcamp_androidapp.databinding.FragmentGalleryBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class GalleryFragment : Fragment() {
 
     private lateinit var binding: FragmentGalleryBinding
-    private val photoList = mutableListOf<Photo>()
     private val permissionList = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE)
     private val checkPermission = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
         result.forEach {
             if (!it.value) {
                 Toast.makeText(context, "권한 동의 필요", Toast.LENGTH_SHORT).show()
+            }
         }
-    }
-    private val readImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        photoList.add(Photo(uri.toString()))
     }
 
     override fun onCreateView(
@@ -39,49 +38,76 @@ class GalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         checkPermission.launch(permissionList)
-        readImage.launch("image/*")
 
-        val recyclerView1 = binding.recyclerView1
-        val layoutManager1 = LinearLayoutManager(requireContext())
-        val photoList1 = mutableListOf<Photo>()
-        val recyclerView2 = binding.recyclerView2
-        val layoutManager2 = LinearLayoutManager(requireContext())
-        val photoList2 = mutableListOf<Photo>()
-        val recyclerView3 = binding.recyclerView3
-        val layoutManager3 = LinearLayoutManager(requireContext())
-        val photoList3 = mutableListOf<Photo>()
+        getAllImages()
 
-        recyclerView1.layoutManager = layoutManager1
-        recyclerView2.layoutManager = layoutManager2
-        recyclerView3.layoutManager = layoutManager3
-
-        val photoList = getPhotoList()
-        for (i in photoList.indices) {
-            if (i%3 == 0) {
-                photoList1.add(photoList[i])
-            }
-            else if (i%3 == 1) {
-                photoList2.add(photoList[i])
-            }
-            else {
-                photoList3.add(photoList[i])
-            }
-        }
-
-        recyclerView1.adapter = PhotoAdapter(photoList1)
-        recyclerView2.adapter = PhotoAdapter(photoList2)
-        recyclerView3.adapter = PhotoAdapter(photoList3)
     }
 
-    private fun getPhotoList(): List<Photo> {
-        val photoList = mutableListOf<Photo>()
-        //todo: photoList에 사진 데이터 추가
-        for (i in 1..20) {
-            //photoList.add(Photo("https://ifh.cc/g/Cydxpa.jpg"))
-            photoList.add(Photo("https://cdn.pixabay.com/photo/2021/08/03/07/03/orange-6518675_960_720.jpg"))
-            photoList.add(Photo("https://ifh.cc/g/zBbY9g.jpg"))
+
+
+    private fun getAllImages() {
+        val imageList = mutableListOf<Photo>()
+        // 안드로이드 기기 내 갤러리에 접근
+        GlobalScope.launch(Dispatchers.Main) {
+            val projection = arrayOf(
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.DATA
+            )
+
+            val cursor = requireActivity().contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                null,
+                null,
+                null
+            )
+
+            cursor?.use {
+                // 이미지의 id, 이름 정보는 이미지 생성과 관련 없으므로 주석 처리 함.
+                // val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+                // val nameColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+                val pathColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+
+                while (it.moveToNext()) {
+                    // 이미지의 id, 이름 정보는 이미지 생성과 관련 없으므로 주석 처리 함.
+                    // val id = it.getLong(idColumn)
+                    // val name = it.getString(nameColumn)
+                    val path = it.getString(pathColumn)
+
+                    imageList.add(Photo(path))
+                }
+            }
+            // 3개의 recyclerView를 선언
+            val recyclerView1 = binding.recyclerView1
+            val layoutManager1 = LinearLayoutManager(requireContext())
+            val photoList1 = mutableListOf<Photo>()
+            val recyclerView2 = binding.recyclerView2
+            val layoutManager2 = LinearLayoutManager(requireContext())
+            val photoList2 = mutableListOf<Photo>()
+            val recyclerView3 = binding.recyclerView3
+            val layoutManager3 = LinearLayoutManager(requireContext())
+            val photoList3 = mutableListOf<Photo>()
+
+            recyclerView1.layoutManager = layoutManager1
+            recyclerView2.layoutManager = layoutManager2
+            recyclerView3.layoutManager = layoutManager3
+
+            // 각 recyclerView에 들어갈 이미지들을 순서대로 배치
+            for (i in imageList.indices) {
+                if (i%3 == 0) {
+                    photoList1.add(imageList[i])
+                }
+                else if (i%3 == 1) {
+                    photoList2.add(imageList[i])
+                }
+                else {
+                    photoList3.add(imageList[i])
+                }
+            }
+            recyclerView1.adapter = PhotoAdapter(photoList1)
+            recyclerView2.adapter = PhotoAdapter(photoList2)
+            recyclerView3.adapter = PhotoAdapter(photoList3)
         }
-        Log.w("check", photoList[0].imageUri)
-        return photoList
     }
 }
