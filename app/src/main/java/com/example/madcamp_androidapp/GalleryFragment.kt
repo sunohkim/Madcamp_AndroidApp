@@ -1,5 +1,6 @@
 package com.example.madcamp_androidapp
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.madcamp_androidapp.databinding.FragmentGalleryBinding
 import kotlinx.coroutines.Dispatchers
@@ -38,12 +40,25 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         checkPermission.launch(permissionList)
 
-        getAllImages()
+        when {
+            ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED -> {
+                getAllImages()
+            }
+            shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+
+            }
+            else -> {
+                requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),1000)
+            }
+        }
+
+        //getAllImages()
 
     }
-
 
 
     private fun getAllImages() {
