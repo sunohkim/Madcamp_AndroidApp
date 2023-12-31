@@ -2,6 +2,7 @@ package com.example.madcamp_androidapp
 
 import android.annotation.SuppressLint
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -18,9 +19,12 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.madcamp_androidapp.databinding.ActivityMainBinding
@@ -79,49 +83,49 @@ class PhoneFragment : Fragment() {
 
 
 
-        // 휴대폰 주소록 불러오기
-        val cr: ContentResolver? = context?.contentResolver // fragment에서는.. context.도 붙이고 ?도 붙여야하는 경우가 많은가봄
-        val cur: Cursor? = cr?.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
-
-        if (cur?.count ?: 0 > 0) {
-            var line: String
-            while (cur?.moveToNext() == true) {
-                val id: Int = cur.getInt(cur.getColumnIndex(ContactsContract.Contacts._ID))
-                line = String.format("%4d", id)
-                val name: String = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                line += " $name"
-
-                if ("1" == cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) {
-                    val pCur: Cursor? = cr?.query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?",
-                        arrayOf(id.toString()),
-                        null
-                    )
-
-                    var i = 0
-                    val pCount = pCur?.count?: 0
-                    val phoneNum = arrayOfNulls<String>(pCount)
-                    val phoneType = arrayOfNulls<String>(pCount)
-
-                    while (pCur?.moveToNext() == true) {
-                        phoneNum[i] = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                        line += " ${phoneNum[i]}"
-                        itemList.add(BoardItem(name, phoneNum[i]!!))
-                        Log.w("numplz", phoneNum[i]!!)
-                        phoneType[i] = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
-                        i++
-                    }
-                    pCur?.close()
-                }
-                //numbook.add(line)
-                Log.w("letscheck", line)
-                Log.w("nameplz", name)
-                line = ""
-            }
-            cur?.close()
-        }
+//        // 휴대폰 주소록 불러오기
+//        val cr: ContentResolver? = context?.contentResolver // fragment에서는.. context.도 붙이고 ?도 붙여야하는 경우가 많은가봄
+//        val cur: Cursor? = cr?.query(Contacts.CONTENT_URI, null, null, null, null)
+//
+//        if (cur?.count ?: 0 > 0) {
+//            var line: String
+//            while (cur?.moveToNext() == true) {
+//                val id: Int = cur.getInt(cur.getColumnIndex(Contacts._ID))
+//                line = String.format("%4d", id)
+//                val name: String = cur.getString(cur.getColumnIndex(Contacts.DISPLAY_NAME))
+//                line += " $name"
+//
+//                if ("1" == cur.getString(cur.getColumnIndex(Contacts.HAS_PHONE_NUMBER))) {
+//                    val pCur: Cursor? = cr?.query(
+//                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+//                        null,
+//                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?",
+//                        arrayOf(id.toString()),
+//                        null
+//                    )
+//
+//                    var i = 0
+//                    val pCount = pCur?.count?: 0
+//                    val phoneNum = arrayOfNulls<String>(pCount)
+//                    val phoneType = arrayOfNulls<String>(pCount)
+//
+//                    while (pCur?.moveToNext() == true) {
+//                        phoneNum[i] = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+//                        line += " ${phoneNum[i]}"
+//                        itemList.add(BoardItem(name, phoneNum[i]!!))
+//                        Log.w("numplz", phoneNum[i]!!)
+//                        phoneType[i] = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
+//                        i++
+//                    }
+//                    pCur?.close()
+//                }
+//                //numbook.add(line)
+//                Log.w("letscheck", line)
+//                Log.w("nameplz", name)
+//                line = ""
+//            }
+//            cur?.close()
+//        }
 
 
 
@@ -206,16 +210,9 @@ class PhoneFragment : Fragment() {
 
 
         // 한 번 시도
-        val newphonenumadapter = CustomAdapter(this)
-        itemList.adapter = adapter
+//        val newphonenumadapter = CustomAdapter(requireContext())
+//        rv_board.adapter = newphonenumadapter
 
-        val bundle: Bundle? = arguments
-        val newname = bundle?.getString("name")
-        val newnum = bundle?.getString("num")
-        Log.w("reallyCheck", newname.toString())
-        Log.w("reallyCheck", newnum.toString())
-        itemList.add(BoardItem(newname.toString(), newnum.toString()))
-        newphonenumadapter.notifyDataSetChanged()
 
 
 
@@ -252,6 +249,10 @@ class PhoneFragment : Fragment() {
         adapter = BoardAdapter(itemList)
         rv_board.adapter = adapter
 
+
+
+
+
         
         return view
     }
@@ -269,9 +270,33 @@ class PhoneFragment : Fragment() {
 //        }
 //    }
 
-    private inner class CustomAdapter(private val context) : BaseAdapter() {
+//    private inner class CustomAdapter(private val context: Context) : BaseAdapter() {
+//        override fun getCount(): Int {
+//            return itemList.size
+//        }
+//
+//        override fun getItem(position: Int): Any? {
+//            return null
+//        }
+//
+//        override fun getItemId(position: Int): Long {
+//            return 0
+//        }
+//
+//        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+//            val itemView = View.inflate(context, R.layout.item_recycler_view, null)
+//            val nameItem: TextView = itemView.findViewById(R.id.txt_name)
+//            val numItem: TextView = itemView.findViewById(R.id.txt_number)
+//
+//            itemList[position] = BoardItem(nameItem.text.toString(), numItem.text.toString())
+//            return itemView
+//        }
+//    }
 
-    }
+//    fun refreshFragment(fragment: Fragment, fragmentManager: FragmentManager) {
+//        var ft: FragmentTransaction = fragmentManager.beginTransaction()
+//        ft.detach(fragment).attach(fragment).commit()
+//    }
 
     companion object {
         lateinit var arguments: Bundle

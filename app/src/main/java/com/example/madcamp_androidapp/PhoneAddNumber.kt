@@ -62,6 +62,7 @@ class PhoneAddNumber : AppCompatActivity() {
             bundle.putString("name", newname)
             bundle.putString("num", newnum)
 
+
             fragment1.arguments = bundle
             finish()
 
