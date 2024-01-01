@@ -1,6 +1,7 @@
 package com.example.madcamp_androidapp
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -25,9 +26,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.madcamp_androidapp.databinding.ActivityMainBinding
+import java.util.logging.Logger.global
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,10 +50,11 @@ class PhoneFragment : Fragment() {
     // 검색시 같은 이름이 있는 아이템이 담길 리스트
     private val searchList = ArrayList<BoardItem>()
     // recyclerView에 추가할 아이템 리스트 (원래 리스트), 인터넷 코드에선 original_list
-    private val itemList = ArrayList<BoardItem>()
+    private var itemList = ArrayList<BoardItem>()
     // 어댑터 흠... 일단 인터넷을 믿어보자
     private lateinit var adapter: BoardAdapter
     private lateinit var editText: EditText
+    private lateinit var rv_board: RecyclerView
 
     // permission 부분
     private lateinit var binding: ActivityMainBinding
@@ -67,6 +71,11 @@ class PhoneFragment : Fragment() {
         // Inflate the layout for this fragment
 
         view = inflater.inflate(R.layout.fragment_phone, container, false)
+        adapter = BoardAdapter(itemList)
+        // 이 rv_board가 원래 코드의 recyclerView임. 어댑터가 연결 된 것!
+        rv_board = view.findViewById<RecyclerView>(R.id.rv_board)
+        rv_board.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        rv_board.adapter = adapter
 
 //        //permission 부분
 //        // 사용자가 퍼미션 허용했는지 확인
@@ -83,77 +92,80 @@ class PhoneFragment : Fragment() {
 
 
 
-//        // 휴대폰 주소록 불러오기
-//        val cr: ContentResolver? = context?.contentResolver // fragment에서는.. context.도 붙이고 ?도 붙여야하는 경우가 많은가봄
-//        val cur: Cursor? = cr?.query(Contacts.CONTENT_URI, null, null, null, null)
-//
-//        if (cur?.count ?: 0 > 0) {
-//            var line: String
-//            while (cur?.moveToNext() == true) {
-//                val id: Int = cur.getInt(cur.getColumnIndex(Contacts._ID))
-//                line = String.format("%4d", id)
-//                val name: String = cur.getString(cur.getColumnIndex(Contacts.DISPLAY_NAME))
-//                line += " $name"
-//
-//                if ("1" == cur.getString(cur.getColumnIndex(Contacts.HAS_PHONE_NUMBER))) {
-//                    val pCur: Cursor? = cr?.query(
-//                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-//                        null,
-//                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?",
-//                        arrayOf(id.toString()),
-//                        null
-//                    )
-//
-//                    var i = 0
-//                    val pCount = pCur?.count?: 0
-//                    val phoneNum = arrayOfNulls<String>(pCount)
-//                    val phoneType = arrayOfNulls<String>(pCount)
-//
-//                    while (pCur?.moveToNext() == true) {
-//                        phoneNum[i] = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-//                        line += " ${phoneNum[i]}"
-//                        itemList.add(BoardItem(name, phoneNum[i]!!))
-//                        Log.w("numplz", phoneNum[i]!!)
-//                        phoneType[i] = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
-//                        i++
-//                    }
-//                    pCur?.close()
-//                }
-//                //numbook.add(line)
-//                Log.w("letscheck", line)
-//                Log.w("nameplz", name)
-//                line = ""
-//            }
-//            cur?.close()
-//        }
+        // 휴대폰 주소록 불러오기
+        val cr: ContentResolver? = context?.contentResolver // fragment에서는.. context.도 붙이고 ?도 붙여야하는 경우가 많은가봄
+        val cur: Cursor? = cr?.query(Contacts.CONTENT_URI, null, null, null, null)
 
+        if (cur?.count ?: 0 > 0) {
+            var line: String
+            while (cur?.moveToNext() == true) {
+                val id: Int = cur.getInt(cur.getColumnIndex(Contacts._ID))
+                line = String.format("%4d", id)
+                val name: String = cur.getString(cur.getColumnIndex(Contacts.DISPLAY_NAME))
+                line += " $name"
 
+                if ("1" == cur.getString(cur.getColumnIndex(Contacts.HAS_PHONE_NUMBER))) {
+                    val pCur: Cursor? = cr?.query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?",
+                        arrayOf(id.toString()),
+                        null
+                    )
 
+                    var i = 0
+                    val pCount = pCur?.count?: 0
+                    val phoneNum = arrayOfNulls<String>(pCount)
+                    val phoneType = arrayOfNulls<String>(pCount)
 
-
-
-        // 새 연락처 추가하는 Activity로 넘어가는 코드
-        addNum = view.findViewById(R.id.btnAdd)
-        addNum.setOnClickListener {
-            val intent = Intent(activity, PhoneAddNumber::class.java)
-            // intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            startActivity(intent)
+                    while (pCur?.moveToNext() == true) {
+                        phoneNum[i] = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                        line += " ${phoneNum[i]}"
+                        itemList.add(BoardItem(name, phoneNum[i]!!))
+                        Log.w("numplz", phoneNum[i]!!)
+                        phoneType[i] = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
+                        i++
+                    }
+                    pCur?.close()
+                }
+                //numbook.add(line)
+                Log.w("letscheck", line)
+                Log.w("nameplz", name)
+                line = ""
+            }
+            cur?.close()
         }
 
 
 
 
+
+
+
+
+
+
         // 이 rv_board가 원래 코드의 recyclerView임. 어댑터가 연결 된 것!
-        val rv_board = view.findViewById<RecyclerView>(R.id.rv_board)
+        // rv_board = view.findViewById<RecyclerView>(R.id.rv_board)
         //rv_board.layoutManager = LinearLayoutManager(context)
         //val itemList = ArrayList<BoardItem>()
+
+
+        // rv_board가 recyclerview임. 위에 주석 적어놨음
+//        rv_board.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+//        //val boardAdapter = BoardAdapter(itemList)
+//        //rv_board.adapter = boardAdapter
+//        adapter = BoardAdapter(requireContext(), itemList, rv_board)
+//        rv_board.adapter = adapter
+
+
 
         itemList.add(BoardItem("Hany Song", "010-4572-1946"))
         itemList.add(BoardItem("Hani Son", "010-1946-4572"))
         itemList.add(BoardItem("김가현", "010-0000-0000"))
         itemList.add(BoardItem("임나현", "010-1111-1111"))
-//        itemList.add(BoardItem("박다현", "010-2222-2222"))
-//        itemList.add(BoardItem("송라현", "010-3333-3333"))
+        itemList.add(BoardItem("박다현", "010-2222-2222"))
+        itemList.add(BoardItem("송라현", "010-3333-3333"))
 //        itemList.add(BoardItem("최마현", "010-4444-4444"))
 //        itemList.add(BoardItem("이바현", "010-5555-5555"))
 //        itemList.add(BoardItem("옹사현", "010-6666-6666"))
@@ -190,6 +202,17 @@ class PhoneFragment : Fragment() {
         //val getintent = Intent(activity, NextActivity)
         //val NewName = WannaIntent.getStringExtra("name")
 
+
+//        viewModel = ViewModelProvider(this).get(PhoneBookViewModel::class.java)
+//        val newadapter = PhoneBookAdapter()
+//        rv_board.adapter = newadapter
+//
+//        veiwModel.phoneBook.observe(viewLifecycleOwner) {}
+
+
+
+
+
 //        val extra: Bundle? = arguments
 //        if (extra != null) {
 //            val newname = extra.getString("name")
@@ -197,7 +220,10 @@ class PhoneFragment : Fragment() {
 //            Log.w("Check", newname.toString())
 //            Log.w("Check", newnum.toString())
 //            itemList.add(BoardItem(newname!!, newnum!!))
+//            Log.w("Check", itemList.size.toString())
+////            adapter.notifyDataSetChanged()
 //        }
+
 
 //        val bundle: Bundle? = arguments
 //        val newname = bundle?.getString("name")
@@ -242,20 +268,68 @@ class PhoneFragment : Fragment() {
             }
         })
 
-        // rv_board가 recyclerview임. 위에 주석 적어놨음
-        rv_board.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        //val boardAdapter = BoardAdapter(itemList)
-        //rv_board.adapter = boardAdapter
-        adapter = BoardAdapter(itemList)
-        rv_board.adapter = adapter
+//        // rv_board가 recyclerview임. 위에 주석 적어놨음
+//        rv_board.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+//        //val boardAdapter = BoardAdapter(itemList)
+//        //rv_board.adapter = boardAdapter
+//        adapter = BoardAdapter(itemList)
+//        rv_board.adapter = adapter
 
 
+        // 새 연락처 추가하는 Activity로 넘어가는 코드
+        addNum = view.findViewById(R.id.btnAdd)
+        addNum.setOnClickListener {
+            val intent = Intent(activity, PhoneAddNumber::class.java)
+            // intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivityForResult(intent, PHONE_ADD_REQUEST_CODE)
+        }
+
+        rv_board.setOnClickListener {
+
+        }
 
 
 
         
         return view
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PHONE_ADD_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.let {
+                val newname = it.getStringExtra("name")
+                val newnum = it.getStringExtra("num")
+                newname?.let { name ->
+                    newnum?.let { num ->
+                        itemList.add(BoardItem(name, num))
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+    }
+
+//    fun updateData(bundle: Bundle) {
+//        val newname = bundle.getString("name")
+//        val newnum = bundle.getString("num")
+//
+//        if (newname != null && newnum != null) {
+//            if (itemList == null) {
+//                itemList = ArrayList<BoardItem>()
+//            }
+//            itemList.add(BoardItem(newname, newnum))
+//
+//            if (adapter == null) {
+//                adapter = BoardAdapter(itemList)
+//                rv_board.adapter = adapter
+//            } else {
+//                adapter.notifyDataSetChanged()
+//            }
+//        }
+//    }
+
 
 //    override fun onRequestPermissionsResult(
 //        requestCode: Int,
@@ -300,6 +374,7 @@ class PhoneFragment : Fragment() {
 
     companion object {
         lateinit var arguments: Bundle
+        private const val PHONE_ADD_REQUEST_CODE = 123
     }
 
 }

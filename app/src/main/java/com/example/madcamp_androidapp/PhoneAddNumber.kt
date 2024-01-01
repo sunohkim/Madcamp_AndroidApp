@@ -1,5 +1,6 @@
 package com.example.madcamp_androidapp
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -51,21 +52,40 @@ class PhoneAddNumber : AppCompatActivity() {
         val AddPhoneNum: Button = findViewById(R.id.btn_add)
         val name: EditText = findViewById(R.id.edit_name)
         val num: EditText = findViewById(R.id.edit_number)
+
+        //val phoneFragment = supportFragmentManager.findFragmentById(R.id.phone_frame) as PhoneFragment
+
+//        AddPhoneNum.setOnClickListener {
+//            val newname: String = name.text.toString()
+//            val newnum: String = num.text.toString()
+//
+//            val fragment1 = PhoneFragment()
+//            //supportFragmentManager.beginTransaction().replace(R.id.add_layout, fragment1).commit()
+//
+//            val bundle = Bundle()
+//            bundle.putString("name", newname)
+//            bundle.putString("num", newnum)
+//
+//            phoneFragment.updateData(bundle)
+//
+//            finish()
+//
+//
+////            fragment1.arguments = bundle
+////            supportFragmentManager.beginTransaction().replace(R.id.add_layout, fragment1).commit()
+////            finish()
+//
+//        }
         AddPhoneNum.setOnClickListener {
             val newname: String = name.text.toString()
             val newnum: String = num.text.toString()
 
-            val fragment1 = PhoneFragment()
-            supportFragmentManager.beginTransaction().replace(R.id.add_layout, fragment1).commit()
+            val resultIntent = Intent()
+            resultIntent.putExtra("name", newname)
+            resultIntent.putExtra("num", newnum)
+            setResult(Activity.RESULT_OK, resultIntent)
 
-            val bundle = Bundle()
-            bundle.putString("name", newname)
-            bundle.putString("num", newnum)
-
-
-            fragment1.arguments = bundle
             finish()
-
         }
 
         // 뒤로 가기 버튼
