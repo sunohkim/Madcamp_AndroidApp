@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -16,6 +17,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -29,10 +32,25 @@ class PhoneFragment : Fragment() {
 
     private val searchList = ArrayList<BoardItem>() // 검색시 같은 이름이 있는 아이템이 담길 리스트
     private var itemList = ArrayList<BoardItem>() // recyclerView에 보여지는 원래 기본 리스트
+    private val permissionList = arrayOf(android.Manifest.permission.READ_CONTACTS)
 
+    private val checkPermission = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+        result.forEach {
+            // 거부 버튼을 눌렀을 때
+            if (!it.value) {
+                Toast.makeText(context, "권한 동의 필요", Toast.LENGTH_SHORT).show()
+            }
+            // 허용 버튼을 눌렀을 때
+            else {
+
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        checkPermission.launch(permissionList)
     }
 
     @SuppressLint("Range")
@@ -140,10 +158,9 @@ class PhoneFragment : Fragment() {
 
 
 
-        
+
         return view
     }
-
 
     // PhoneAddNumber에서 가지고 온 Result(name, num)을 itemList에 추가하는 과정
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -162,9 +179,28 @@ class PhoneFragment : Fragment() {
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            READ_CONTACTS_REQUEST_CODE -> {
+                // 권한이 허용된 경우
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                }
+                // 권한이 거부된 경우
+                else {
+                    Toast.makeText(context, "권한 동의 필요", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     companion object {
         private const val PHONE_ADD_REQUEST_CODE = 123
+        private const val READ_CONTACTS_REQUEST_CODE = 1
     }
 
 }
