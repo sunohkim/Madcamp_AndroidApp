@@ -16,76 +16,24 @@ class PhoneAddNumber : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_phone_add_number)
 
-//        val BackButton: Button = findViewById(R.id.btn_back)
-//        BackButton.setOnClickListener {
-//            val intent = Intent(this, PhoneFragment::class.java)
-//            startActivity(intent)
-//            finish()
-//        }
+    
+        val AddPhoneNum: Button = findViewById(R.id.btn_add) // 추가하기 버튼
+        val name: EditText = findViewById(R.id.edit_name) // 입력한 이름
+        val num: EditText = findViewById(R.id.edit_number) // 입력한 번호
 
-//        // 여기서 메인 리스트에 추가할 리스트를 만들고, PhoneFragment로 전달
-//        val AddPhoneNum: Button = findViewById(R.id.btn_add)
-//        val WannaAddName: EditText = findViewById(R.id.edit_name)
-//        val WannaAddNum: EditText = findViewById(R.id.edit_number)
-//        // val WannaIntent = Intent(this, PhoneFragment::class.java)
-//        var bundle = Bundle()
-//        var addfragment = PhoneFragment()
-//        AddPhoneNum.setOnClickListener {
-//            val NewPhoneNum: BoardItem = BoardItem(WannaAddName.text.toString(), WannaAddNum.text.toString())
-//            val NewName = WannaAddName.text.toString()
-//            val NewNum = WannaAddNum.text.toString()
-//            Log.w("Backcheck", NewName)
-//            Log.w("Backcheck,", NewNum)
-//            //WannaIntent.putExtra("name", NewName)
-//            //WannaIntent.putExtra("num", NewNum)
-//
-//            //supportFragmentManager.beginTransaction().replace(R.id.add_layout, addfragment).commit()
-//
-//            bundle.putString("name", NewName)
-//            bundle.putString("num", NewNum)
-//            addfragment.arguments = bundle
-//
-//            //activity?.supportFragmentManager!!.beginTransaction().replace(R.id., addfragment).commit()
-//            //startActivity(WannaIntent)
-//
-//        }
-        val AddPhoneNum: Button = findViewById(R.id.btn_add)
-        val name: EditText = findViewById(R.id.edit_name)
-        val num: EditText = findViewById(R.id.edit_number)
-
-        //val phoneFragment = supportFragmentManager.findFragmentById(R.id.phone_frame) as PhoneFragment
-
-//        AddPhoneNum.setOnClickListener {
-//            val newname: String = name.text.toString()
-//            val newnum: String = num.text.toString()
-//
-//            val fragment1 = PhoneFragment()
-//            //supportFragmentManager.beginTransaction().replace(R.id.add_layout, fragment1).commit()
-//
-//            val bundle = Bundle()
-//            bundle.putString("name", newname)
-//            bundle.putString("num", newnum)
-//
-//            phoneFragment.updateData(bundle)
-//
-//            finish()
-//
-//
-////            fragment1.arguments = bundle
-////            supportFragmentManager.beginTransaction().replace(R.id.add_layout, fragment1).commit()
-////            finish()
-//
-//        }
+        // 추가하기 버튼을 눌렀을 때, PhoneFragment로 입력한 이름과 번호를 전달하는 과정
         AddPhoneNum.setOnClickListener {
             val newname: String = name.text.toString()
             val newnum: String = num.text.toString()
 
-            val resultIntent = Intent()
+            val resultIntent = Intent() // Intent를 이용해서 전달
             resultIntent.putExtra("name", newname)
             resultIntent.putExtra("num", newnum)
+            
+            // Result가 나왔음을 setResult()를 통해 PhoneFragment의 onActivityResult에 전달
             setResult(Activity.RESULT_OK, resultIntent)
 
-            finish()
+            finish() // Activity 창 닫기
         }
 
         // 뒤로 가기 버튼
