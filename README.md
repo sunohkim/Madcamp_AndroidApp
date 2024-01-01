@@ -7,7 +7,7 @@
 <img src="https://img.shields.io/badge/AndroidStudio-3DDC84?style=flat-square&logo=AndroidStudio&logoColor=white"/> <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=Kotlin&logoColor=white"/>
 
 ### 👥 Developers
-
+김선오, 송한이
 
 ## Description
 몰입캠프 1주차 안드로이드 앱 제작 프로젝트입니다.
