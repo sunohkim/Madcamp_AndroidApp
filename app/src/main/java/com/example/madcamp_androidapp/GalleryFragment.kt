@@ -1,31 +1,42 @@
 package com.example.madcamp_androidapp
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.madcamp_androidapp.databinding.FragmentGalleryBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [GalleryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class GalleryFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    companion object {
+        const val READ_EXTERNAL_STORAGE_REQUEST_CODE = 1
+    }
+
+    private lateinit var binding: FragmentGalleryBinding
+    private val permissionList = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    // 권한 허용 알림창에서 허용/거부 버튼을 누른 직후 동작 관련 부분
+    private val checkPermission = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+        result.forEach {
+            // 거부 버튼을 눌렀을 때
+            if (!it.value) {
+                Toast.makeText(context, "권한 동의 필요", Toast.LENGTH_SHORT).show()
+            }
+            // 허용 버튼을 눌렀을 때
+            else {
+                getAllImages()
+            }
         }
     }
 
@@ -33,27 +44,102 @@ class GalleryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gallery, container, false)
+        binding = FragmentGalleryBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment GalleryFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            GalleryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        checkPermission.launch(permissionList)
+    }
+
+    // 권한 허용 여부 알림창이 나타나지 않은 경우에 대한 처리
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            READ_EXTERNAL_STORAGE_REQUEST_CODE -> {
+                // 권한이 허용된 경우
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getAllImages()
+                }
+                // 권한이 거부된 경우
+                else {
+                    Toast.makeText(context, "권한 동의 필요", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+    private fun getAllImages() {
+        val imageList = mutableListOf<Photo>()
+        // 안드로이드 기기 내 갤러리에 접근
+        GlobalScope.launch(Dispatchers.Main) {
+            val projection = arrayOf(
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.DATA
+            )
+
+            val cursor = requireActivity().contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                null,
+                null,
+                null
+            )
+
+            cursor?.use {
+                // 이미지의 id, 이름 정보는 이미지 생성과 관련 없으므로 주석 처리 함.
+                // val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+                // val nameColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+                val pathColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+
+                // 갤러리 내 각 이미지에 접근 후 이미지의 URI를 가져와 리스트에 저장
+                while (it.moveToNext()) {
+                    // 이미지의 id, 이름 정보는 이미지 생성과 관련 없으므로 주석 처리 함.
+                    // val id = it.getLong(idColumn)
+                    // val name = it.getString(nameColumn)
+                    val path = it.getString(pathColumn)
+
+                    imageList.add(Photo(path))
+                }
+            }
+
+            // 3개의 recyclerView를 선언
+            val recyclerView1 = binding.recyclerView1
+            val layoutManager1 = LinearLayoutManager(requireContext())
+            val photoList1 = mutableListOf<Photo>()
+            val recyclerView2 = binding.recyclerView2
+            val layoutManager2 = LinearLayoutManager(requireContext())
+            val photoList2 = mutableListOf<Photo>()
+            val recyclerView3 = binding.recyclerView3
+            val layoutManager3 = LinearLayoutManager(requireContext())
+            val photoList3 = mutableListOf<Photo>()
+
+            recyclerView1.layoutManager = layoutManager1
+            recyclerView2.layoutManager = layoutManager2
+            recyclerView3.layoutManager = layoutManager3
+
+            // 각 recyclerView에 들어갈 이미지들을 순서대로 배치
+            for (i in imageList.indices) {
+                if (i%3 == 0) {
+                    photoList1.add(imageList[i])
+                }
+                else if (i%3 == 1) {
+                    photoList2.add(imageList[i])
+                }
+                else {
+                    photoList3.add(imageList[i])
+                }
+            }
+            // adapter 연결
+            recyclerView1.adapter = PhotoAdapter(photoList1)
+            recyclerView2.adapter = PhotoAdapter(photoList2)
+            recyclerView3.adapter = PhotoAdapter(photoList3)
+        }
     }
 }
