@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.view.View
+import android.widget.Toast
 
 class PhoneAddNumber : AppCompatActivity() {
 
@@ -25,15 +26,20 @@ class PhoneAddNumber : AppCompatActivity() {
         AddPhoneNum.setOnClickListener {
             val newname: String = name.text.toString()
             val newnum: String = num.text.toString()
+            if (!newname.isNullOrEmpty() && !newnum.isNullOrEmpty()) {
 
-            val resultIntent = Intent() // Intent를 이용해서 전달
-            resultIntent.putExtra("name", newname)
-            resultIntent.putExtra("num", newnum)
-            
-            // Result가 나왔음을 setResult()를 통해 PhoneFragment의 onActivityResult에 전달
-            setResult(Activity.RESULT_OK, resultIntent)
+                val resultIntent = Intent() // Intent를 이용해서 전달
+                resultIntent.putExtra("name", newname)
+                resultIntent.putExtra("num", newnum)
 
-            finish() // Activity 창 닫기
+                // Result가 나왔음을 setResult()를 통해 PhoneFragment의 onActivityResult에 전달
+                setResult(Activity.RESULT_OK, resultIntent)
+
+                finish() // Activity 창 닫기
+            }
+            else {
+                Toast.makeText(this, "이름, 전화번호 정보를 입력하세요.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // 뒤로 가기 버튼
