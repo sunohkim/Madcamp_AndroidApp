@@ -74,8 +74,49 @@ class PhoneFragment : Fragment() {
             data?.let {
                 val newname = it.getStringExtra("name")
                 val newnum = it.getStringExtra("num")
+
+                var parsingNum = ""
+                var numlength: Int = 0
+                if (newnum != null) {
+                    numlength = newnum.length
+                } // 전화번호 길이
+
+                if (newnum != null) {
+                    if (newnum.substring(0, 1) == "0") {
+                        // 0으로 시작하는 경우는 대체로 -가 들어감
+                        if (numlength >= 9 && numlength <= 10) {
+                            if (newnum.substring(1, 2) == "2") {
+                                // 02로 시작하는 번호인 경우
+                                // 02-000-0000, 02-0000-0000 모두 가능
+                                val mid = newnum.substring(2 until numlength-4)
+                                val last = newnum.substring(numlength-4)
+                                parsingNum = "02-" + mid + "-" + last
+                            } else {
+                                // 그 외 지역번호, 혹은 옛날 전화번호
+                                // 051-000-0000, 017-000-0000 모두 가능
+                                val first = newnum.substring(0 until 3)
+                                val mid = newnum.substring(3 until numlength-4)
+                                val last = newnum.substring(numlength-4)
+                                parsingNum = first + "-" + mid + "-" + last
+                            }
+                        } else if (numlength == 11) {
+                            // 일반 전화번호, 또는 02를 제외한 지역번호
+                            // 010-0000-0000, 032-0000-0000
+                            val first = newnum.substring(0 until 3)
+                            val mid = newnum.substring(3 until numlength-4)
+                            val last = newnum.substring(numlength-4)
+                            parsingNum = first + "-" + mid + "-" + last
+                        } else {
+                            // 9, 10, 11자리보다 더 긴 경우 그냥 붙여서 넣기
+                            parsingNum = newnum
+                        }
+                    } else {
+                        // 0이외의 숫자로 시작하면 그냥 붙여서 넣기
+                        parsingNum = newnum
+                    }
+                }
                 newname?.let { name ->
-                    newnum?.let { num ->
+                    parsingNum?.let { num ->
                         // 새로운 연락처 정보를 추가하고 이름 순으로 정렬
                         itemList.add(BoardItem(name, num))
                         itemList.sortBy { it.name }
