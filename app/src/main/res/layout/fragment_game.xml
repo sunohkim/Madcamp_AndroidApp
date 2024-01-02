@@ -1,9 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/brightpink"
     tools:context=".GameFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/heart1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/emptyheart"
+            app:layout_constraintBottom_toBottomOf="@+id/heart3"
+            app:layout_constraintEnd_toStartOf="@+id/heart2"
+            app:layout_constraintTop_toTopOf="@+id/heart3" />
+
+        <ImageView
+            android:id="@+id/heart2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/emptyheart"
+            app:layout_constraintBottom_toBottomOf="@+id/heart3"
+            app:layout_constraintEnd_toStartOf="@+id/heart3"
+            app:layout_constraintTop_toTopOf="@+id/heart3" />
+
+
+        <ImageView
+            android:id="@+id/heart3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="30dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/emptyheart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="거미줄을 클릭해서 샬롯과 윌버가\n친해질 수 있게 도와주세요 :)"
+            android:textAlignment="textEnd"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/heart3"
+            app:layout_constraintTop_toBottomOf="@+id/heart2" />
+
+        <ImageButton
+            android:id="@+id/btn_web"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="-13dp"
+            android:layout_marginTop="-25dp"
+            android:adjustViewBounds="true"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:scaleX="1.15"
+            android:scaleY="1.15"
+            android:src="@drawable/web"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_level_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="Level Up!"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/tv_count"
+            app:layout_constraintEnd_toEndOf="@+id/tv_count"
+            app:layout_constraintStart_toStartOf="@+id/tv_count" />
+
+        <ImageButton
+            android:id="@+id/btn_little_pig"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="100dp"
+            android:adjustViewBounds="true"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/littlepig"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/line"
+            android:layout_width="2dp"
+            android:layout_height="10dp"
+            android:layout_marginTop="93dp"
+            android:background="#000000"
+            android:src="@drawable/circle"
+            app:layout_constraintEnd_toEndOf="@+id/spider"
+            app:layout_constraintStart_toStartOf="@+id/spider"
+            app:layout_constraintTop_toTopOf="@+id/btn_web" />
+
+        <ImageView
+            android:id="@+id/spider"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="50dp"
+            android:scaleType="centerInside"
+            android:scaleX="1.1"
+            android:scaleY="1.1"
+            android:src="@drawable/spider"
+            app:layout_constraintStart_toStartOf="@+id/btn_web"
+            app:layout_constraintTop_toBottomOf="@+id/line" />
+
+        <ImageView
+            android:id="@+id/hay"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginBottom="30dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/onehay"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/feed_hay"
+            app:layout_constraintStart_toStartOf="@+id/feed_hay" />
+
+        <ImageView
+            android:id="@+id/feed_hay"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="-120dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/hay"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_little_pig" />
+
+        <ImageView
+            android:id="@+id/seed"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/seed"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/feed_bowl"
+            app:layout_constraintEnd_toEndOf="@+id/feed_bowl" />
+
+        <ImageView
+            android:id="@+id/feed_bowl"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="-80dp"
+            android:layout_marginEnd="50dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/feeding"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_little_pig" />
+
+        <ImageView
+            android:id="@+id/feed_bottle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="-10dp"
+            android:layout_marginBottom="-10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/babybottle"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_little_pig"
+            app:layout_constraintStart_toStartOf="@+id/btn_little_pig" />
+
+        <TextView
+            android:id="@+id/be_friends1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="50dp"
+            android:text="❤️"
+            android:textSize="40sp"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@+id/btn_little_pig"
+            app:layout_constraintTop_toTopOf="@+id/btn_little_pig" />
+
+        <TextView
+            android:id="@+id/be_friends2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="120dp"
+            android:text="❤️"
+            android:textSize="40sp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@+id/btn_little_pig"
+            app:layout_constraintTop_toTopOf="@+id/btn_little_pig" />
+
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="윌버🐷에게 먹이를 주세요!"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/btn_little_pig"
+            app:layout_constraintEnd_toEndOf="@+id/btn_little_pig"
+            app:layout_constraintStart_toStartOf="@+id/btn_little_pig" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
