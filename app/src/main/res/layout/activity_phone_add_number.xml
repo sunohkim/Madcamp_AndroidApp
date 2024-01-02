@@ -49,7 +49,7 @@
         android:layout_marginStart="30dp"
         android:backgroundTint="#00FFFFFF"
         android:foreground="@drawable/ic_back_black_24dp"
-        android:foregroundTint="@color/green"
+        android:foregroundTint="@color/darkpink"
         app:layout_constraintBottom_toBottomOf="@+id/txt_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txt_title" />
@@ -61,7 +61,7 @@
         android:layout_marginTop="80dp"
         android:text="추가하기"
         android:textSize="16dp"
-        android:backgroundTint="@color/green"
+        android:backgroundTint="@color/darkpink"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_number" />
