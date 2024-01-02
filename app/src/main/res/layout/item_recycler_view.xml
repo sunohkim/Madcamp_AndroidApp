@@ -12,13 +12,13 @@
         android:id="@+id/tv_profile"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="25dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="1dp"
         android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/profile" />
+        app:srcCompat="@drawable/ic_profile_black_24dp" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -46,11 +46,12 @@
 
     <Button
         android:id="@+id/btn_delete"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="25dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="20dp"
         android:backgroundTint="#00FFFFFF"
-        android:foreground="@drawable/delete"
+        android:foreground="@drawable/ic_delete_black_24dp"
+        android:foregroundTint="@color/red"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -44,7 +44,7 @@ class BoardAdapter(private var itemList: ArrayList<BoardItem>) :
 
             // '삭제' 버튼 색상 지정
             val negativeButton: Button = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-            negativeButton.setTextColor(ContextCompat.getColor(holder.btn_delete.context, android.R.color.holo_red_light)) // 빨간색으로 변경
+            negativeButton.setTextColor(ContextCompat.getColor(holder.btn_delete.context, R.color.red)) // 빨간색으로 변경
         }
     }
 
