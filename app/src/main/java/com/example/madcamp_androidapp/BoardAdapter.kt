@@ -2,6 +2,8 @@ package com.example.madcamp_androidapp
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 
 class BoardAdapter(private var itemList: ArrayList<BoardItem>) :
@@ -23,8 +26,16 @@ class BoardAdapter(private var itemList: ArrayList<BoardItem>) :
 
     override fun onBindViewHolder(holder: BoardViewHolder, position: Int) {
         holder.bind(itemList[position])
+
+        // 전화 버튼 (btn_call) 눌렀을 때 전화하기
+        holder.btn_call.setOnClickListener {
+            val telNum = "tel:${itemList[position].num}"
+
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(telNum))
+            holder.itemView.context.startActivity(intent)
+        }
         
-        // 삭제 버튼 (btn_delete) 눌렀을 때, 항목 삭제
+        // 삭제 버튼 (btn_delete) 눌렀을 때 항목 삭제
         holder.btn_delete.setOnClickListener {
             val builder = AlertDialog.Builder(holder.btn_delete.context)
             val inflater = LayoutInflater.from(holder.btn_delete.context)
@@ -45,6 +56,10 @@ class BoardAdapter(private var itemList: ArrayList<BoardItem>) :
             // '삭제' 버튼 색상 지정
             val negativeButton: Button = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
             negativeButton.setTextColor(ContextCompat.getColor(holder.btn_delete.context, R.color.red)) // 빨간색으로 변경
+
+            // '취소' 버튼 색상 지정
+            val positiveButton: Button = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
+            positiveButton.setTextColor(ContextCompat.getColor(holder.btn_delete.context, R.color.darkgray)) // 빨간색으로 변경
         }
     }
 
@@ -71,6 +86,7 @@ class BoardAdapter(private var itemList: ArrayList<BoardItem>) :
         // Adapter에서 text나 button을 쓰려면, 여기서 선언해줘야 함
         val tv_name = itemView.findViewById<TextView>(R.id.tv_name)
         val tv_num = itemView.findViewById<TextView>(R.id.tv_num)
+        val btn_call = itemView.findViewById<Button>(R.id.btn_call)
         val btn_delete = itemView.findViewById<Button>(R.id.btn_delete)
 
         // item의 name과 num을 textView에 적힌 대로 할당해주는 함수

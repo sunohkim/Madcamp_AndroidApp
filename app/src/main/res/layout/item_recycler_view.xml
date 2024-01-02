@@ -41,7 +41,20 @@
         android:textAlignment="center"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_profile"
+
         app:layout_constraintStart_toEndOf="@+id/tv_profile" />
+
+    <Button
+        android:id="@+id/btn_call"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="16dp"
+        android:backgroundTint="#00FFFFFF"
+        android:foreground="@drawable/ic_phonecall_black_24dp"
+        android:foregroundTint="@color/green"
+        app:layout_constraintEnd_toStartOf="@id/btn_delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_delete"

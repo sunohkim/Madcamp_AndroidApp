@@ -48,11 +48,10 @@
 
             <Button
                 android:id="@+id/btnAdd"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginBottom="5dp"
                 android:backgroundTint="#00FFFFFF"
                 android:foreground="@drawable/ic_add_black_24dp"
                 android:foregroundTint="@color/darkpink"
@@ -63,8 +62,8 @@
 
             <Button
                 android:id="@+id/btnSearch"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginBottom="10dp"
                 android:backgroundTint="#00FFFFFF"
