@@ -40,6 +40,8 @@
                 android:layout_marginTop="16dp"
                 android:background="@null"
                 android:hint="Search"
+                android:imeOptions="actionDone"
+                android:inputType="text"
                 app:layout_constraintStart_toEndOf="@+id/btnSearch"
                 app:layout_constraintTop_toTopOf="parent" />
 
