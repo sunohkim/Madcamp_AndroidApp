@@ -76,6 +76,7 @@ class PhoneFragment : Fragment() {
                 val newnum = it.getStringExtra("num")
                 newname?.let { name ->
                     newnum?.let { num ->
+                        // 새로운 연락처 정보를 추가하고 이름 순으로 정렬
                         itemList.add(BoardItem(name, num))
                         itemList.sortBy { it.name }
                         adapter.notifyDataSetChanged()
@@ -137,7 +138,6 @@ class PhoneFragment : Fragment() {
             }
             // 리스트를 이름 순으로 정렬
             itemList.sortBy { it.name }
-            Log.w("itemList sort: ", itemList.toString())
         }
         cursor?.close()
 

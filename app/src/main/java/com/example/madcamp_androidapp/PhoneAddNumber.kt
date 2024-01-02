@@ -24,11 +24,9 @@ class PhoneAddNumber : AppCompatActivity() {
 
         // 추가하기 버튼을 눌렀을 때, PhoneFragment로 입력한 이름과 번호를 전달하는 과정
         AddPhoneNum.setOnClickListener {
-            Log.w("name: ", name.toString())
             val newname: String = name.text.toString()
             val newnum: String = num.text.toString()
             if (!newname.isNullOrEmpty() && !newnum.isNullOrEmpty()) {
-                Log.w("newname: ", newname)
 
                 val resultIntent = Intent() // Intent를 이용해서 전달
                 resultIntent.putExtra("name", newname)

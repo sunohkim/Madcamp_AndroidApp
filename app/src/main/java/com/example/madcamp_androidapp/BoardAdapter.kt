@@ -1,13 +1,16 @@
 package com.example.madcamp_androidapp
 
 import android.content.Context
+import android.content.DialogInterface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class BoardAdapter(private var itemList: ArrayList<BoardItem>) :
@@ -23,7 +26,25 @@ class BoardAdapter(private var itemList: ArrayList<BoardItem>) :
         
         // 삭제 버튼 (btn_delete) 눌렀을 때, 항목 삭제
         holder.btn_delete.setOnClickListener {
-            removeContact(position)
+            val builder = AlertDialog.Builder(holder.btn_delete.context)
+            val inflater = LayoutInflater.from(holder.btn_delete.context)
+            val view = inflater.inflate(R.layout.dialog_image, null)
+
+            // '삭제' 아이콘을 눌렀을 때 나오는 확인 메시지
+            builder.setMessage("연락처를 삭제하시겠습니까?")
+                .setPositiveButton("취소") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setNegativeButton("삭제") { dialog, _ ->
+                    removeContact(position)
+                    dialog.dismiss()
+                }
+            val alertDialog = builder.create()
+            alertDialog.show()
+
+            // '삭제' 버튼 색상 지정
+            val negativeButton: Button = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+            negativeButton.setTextColor(ContextCompat.getColor(holder.btn_delete.context, android.R.color.holo_red_light)) // 빨간색으로 변경
         }
     }
 
