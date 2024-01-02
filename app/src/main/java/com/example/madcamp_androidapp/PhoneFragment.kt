@@ -77,6 +77,7 @@ class PhoneFragment : Fragment() {
                 newname?.let { name ->
                     newnum?.let { num ->
                         itemList.add(BoardItem(name, num))
+                        itemList.sortBy { it.name }
                         adapter.notifyDataSetChanged()
                     }
                 }
@@ -134,11 +135,15 @@ class PhoneFragment : Fragment() {
                 // 리스트에 추가
                 itemList.add(BoardItem(name, phoneNumber))
             }
+            // 리스트를 이름 순으로 정렬
+            itemList.sortBy { it.name }
+            Log.w("itemList sort: ", itemList.toString())
         }
         cursor?.close()
 
         // 검색 엔진 만들기
         editText = binding.editSearch
+
         // editText 리스터 작성
         editText.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
