@@ -32,7 +32,6 @@ class PhotoAdapter(private val photoList: List<Photo>): RecyclerView.Adapter<Pho
         val photo = photoList[position]
         holder.bind(photo)
 
-        // 이미지를 클릭했을 때의 동작 (이미지 크게 보기)
         holder.itemView.setOnClickListener {
             val builder = AlertDialog.Builder(holder.itemView.context)
             val inflater = LayoutInflater.from(holder.itemView.context)

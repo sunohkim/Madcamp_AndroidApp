@@ -140,6 +140,32 @@ class GalleryFragment : Fragment() {
             recyclerView1.adapter = PhotoAdapter(photoList1)
             recyclerView2.adapter = PhotoAdapter(photoList2)
             recyclerView3.adapter = PhotoAdapter(photoList3)
+
+            // viewPager 선언
+            val viewPager = binding.viewPager
+
+            // adapter 연결
+            viewPager.adapter = SwipePhotoAdapter(imageList)
+
+            // 초기 스와이프 화면은 보이지 않는 상태로 설정
+            viewPager.visibility = View.GONE
+
+            // 토글 버튼에 따라 보이는 화면 전환
+            val toggleButton = binding.toggleButton
+            toggleButton.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    recyclerView1.visibility = View.GONE
+                    recyclerView2.visibility = View.GONE
+                    recyclerView3.visibility = View.GONE
+                    viewPager.visibility = View.VISIBLE
+                } else {
+                    recyclerView1.visibility = View.VISIBLE
+                    recyclerView2.visibility = View.VISIBLE
+                    recyclerView3.visibility = View.VISIBLE
+                    viewPager.visibility = View.GONE
+                }
+            }
+
         }
     }
 }
