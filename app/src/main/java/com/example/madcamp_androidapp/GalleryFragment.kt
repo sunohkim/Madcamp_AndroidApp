@@ -141,10 +141,16 @@ class GalleryFragment : Fragment() {
             recyclerView2.adapter = PhotoAdapter(photoList2)
             recyclerView3.adapter = PhotoAdapter(photoList3)
 
+            // viewPager 선언
             val viewPager = binding.viewPager
 
+            // adapter 연결
             viewPager.adapter = SwipePhotoAdapter(imageList)
 
+            // 초기 스와이프 화면은 보이지 않는 상태로 설정
+            viewPager.visibility = View.GONE
+
+            // 토글 버튼에 따라 보이는 화면 전환
             val toggleButton = binding.toggleButton
             toggleButton.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {

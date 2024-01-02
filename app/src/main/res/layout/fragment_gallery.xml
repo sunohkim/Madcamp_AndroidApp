@@ -63,11 +63,12 @@
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/toggleButton" />
+                android:layout_weight="1"/>
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:overScrollMode="never">
 
                 <LinearLayout
@@ -78,7 +79,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerView1"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:clipToPadding="false"
                         android:overScrollMode="never"
@@ -90,7 +91,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerView2"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:clipToPadding="false"
                         android:overScrollMode="never"
@@ -102,7 +103,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerView3"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:clipToPadding="false"
                         android:overScrollMode="never"
@@ -117,16 +118,6 @@
 
         </FrameLayout>
 
-
-
-
     </LinearLayout>
-
-
-
-
-
-
-
 
 </FrameLayout>
