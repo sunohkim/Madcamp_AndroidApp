@@ -201,6 +201,8 @@ class GameFragment : Fragment() {
                     
                     // 친밀도 증가시키는 거미줄 비활성화
                     webButton.isEnabled = false
+                    // 윌버 버튼도 비활성화
+                    pigButton.isEnabled = false
                     
                     if (friend < 3) {
                         // 만약 친밀도가 부족하다면 스테이크로 변함
@@ -216,6 +218,8 @@ class GameFragment : Fragment() {
                         countText.text = "샬롯이 윌버를 구해줬어요 👏\n샬롯과 윌버는 평생 행복하게 살았답니다 🤗"
                         handler.postDelayed( { countText.text = "한 번 더?\n 윌버를 눌러주세요 🐽" }, 2000)
                     }
+                    // 버튼을 눌러주세요 후에 다시 버튼 활성화
+                    handler.postDelayed( {pigButton.isEnabled = true }, 2000)
                 }
 
             }
