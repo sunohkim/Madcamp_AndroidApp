@@ -99,11 +99,6 @@ class GalleryFragment : Fragment() {
 
             // Uri 가져오기
             currentPhotoUri?.let { uri ->
-                val bitmap = getBitmapFromUri(uri)
-
-                // 저장된 갤러리 경로로 비트맵을 저장
-                bitmap?.let { savePhotoToGallery(it) }
-
                 val newPhoto = Photo(uri.toString())
                 imageList.add(newPhoto)
                 addInPhotoList(newPhoto)
@@ -212,50 +207,6 @@ class GalleryFragment : Fragment() {
         return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
     }
 
-    private fun getBitmapFromUri(uri: Uri): Bitmap? {
-        return try {
-            // Uri를 사용하여 ContentResolver를 통해 InputStream을 열고, BitmapFactory를 사용하여 Bitmap으로 변환
-            val inputStream = requireContext().contentResolver.openInputStream(uri)
-            BitmapFactory.decodeStream(inputStream)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    private fun savePhotoToGallery(bitmap: Bitmap) {
-        // 현재 타임스탬프를 가져와 이미지 파일 이름으로 사용
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-
-        // Pictures 디렉토리에 고유한 이름으로 파일 생성
-        val imageFileName = "JPEG_${timeStamp}_"
-        val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val imageFile = File.createTempFile(imageFileName, ".jpg", storageDir)
-
-        try {
-            // 비트맵 데이터를 파일에 쓰기 위한 출력 스트림 생성
-            val fos = FileOutputStream(imageFile)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
-            fos.flush()
-            fos.close()
-
-            // 이미지를 기기 갤러리에 추가
-            MediaScannerConnection.scanFile(
-                requireContext(),
-                arrayOf(imageFile.absolutePath),
-                arrayOf("image/jpeg"),
-                null
-            )
-
-            // 사용자에게 사진이 저장되었음을 알림
-            Toast.makeText(context, "사진이 갤러리에 저장되었습니다.", Toast.LENGTH_SHORT).show()
-        } catch (e: IOException) {
-            e.printStackTrace()
-            // 사진 저장 중 오류가 발생한 경우 사용자에게 알림
-            Toast.makeText(context, "사진 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private fun getAllImages(callback: (Boolean) -> Unit, onError: (Error) -> Unit) {
         var isget = false
 
@@ -341,6 +292,7 @@ class GalleryFragment : Fragment() {
 
         // 토글 버튼에 따라 보이는 화면 전환
         val toggleButton = binding.toggleButton
+
         toggleButton.setOnToggledListener(object : OnToggledListener {
             override fun onSwitched(toggleableView: ToggleableView, isOn: Boolean) {
                 if (isOn) {
