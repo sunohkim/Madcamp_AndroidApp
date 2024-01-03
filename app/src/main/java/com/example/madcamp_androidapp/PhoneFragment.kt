@@ -91,13 +91,17 @@ class PhoneFragment : Fragment() {
                                 val mid = newnum.substring(2 until numlength-4)
                                 val last = newnum.substring(numlength-4)
                                 parsingNum = "02-" + mid + "-" + last
-                            } else {
+                            } else if (numlength == 10) {
                                 // 그 외 지역번호, 혹은 옛날 전화번호
                                 // 051-000-0000, 017-000-0000 모두 가능
+                                // 얘네는 무조건 10자리
                                 val first = newnum.substring(0 until 3)
                                 val mid = newnum.substring(3 until numlength-4)
                                 val last = newnum.substring(numlength-4)
                                 parsingNum = first + "-" + mid + "-" + last
+                            } else {
+                                // 02로 시작하지도 않고 10자리도 아니면
+                                // (즉 02로 시작하지 않는 9자리면) 그냥 그대로
                             }
                         } else if (numlength == 11) {
                             // 일반 전화번호, 또는 02를 제외한 지역번호
