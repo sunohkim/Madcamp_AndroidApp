@@ -72,13 +72,13 @@
 - 샬롯과 윌버의 친밀도가 기준점을 넘기지 못하면 게임이 종료했을 때 윌버는 주인에게 잡아먹히게 됩니다. <br/>
   하지만 샬롯과 윌버의 친밀도가 기준점을 넘기면, 샬롯이 "대단한 돼지", "멋진" 이라는 한글을 알려주며 윌버는 살 수 있게 됩니다.
 
----
-
-## 📁 Resources
-- APK file : https://drive.google.com/file/d/1n5rj19rOMKxKWVLpkJg9vBp67HwSLSEq/view?usp=sharing
-
 ***Technical Description***
 - Animation을 이용하여 윌버에게 밥을 주는 모션 및 샬롯이 움직이는 모션을 모두 구현하였습니다.
 - 수많은 ClickListener과 Handler을 이용해서 클리커 게임의 각 부분을 모두 조절하였습니다.
 - 마켓 버튼을 누르면 모자 가게라는 새로운 Activity가 나타납니다. <br/>
   Intent를 이용해 Fragment와 Activity간 데이터를 주고 받았습니다.
+
+---
+
+## 📁 Resources
+- APK file : https://drive.google.com/file/d/1n5rj19rOMKxKWVLpkJg9vBp67HwSLSEq/view?usp=sharing
