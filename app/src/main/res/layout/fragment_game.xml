@@ -16,6 +16,37 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
+            android:id="@+id/ivCoin"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/coin"
+            app:layout_constraintBottom_toTopOf="@+id/btnGomarket"
+            app:layout_constraintEnd_toStartOf="@+id/tvCoin" />
+
+        <TextView
+            android:id="@+id/tvCoin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="0 coins"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/btnGomarket"
+            app:layout_constraintEnd_toEndOf="@+id/btnGomarket" />
+
+        <Button
+            android:id="@+id/btnGomarket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="마켓"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
             android:id="@+id/heart1"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -48,7 +79,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_friend"
+            android:id="@+id/tvFriend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="거미줄을 클릭해서 샬롯과 윌버가\n친해질 수 있게 도와주세요 :)"
@@ -59,7 +90,7 @@
             app:layout_constraintTop_toBottomOf="@+id/heart2" />
 
         <ImageButton
-            android:id="@+id/btn_web"
+            android:id="@+id/btnWeb"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginStart="-13dp"
@@ -73,22 +104,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_level_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="Level Up!"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/tv_count"
-            app:layout_constraintEnd_toEndOf="@+id/tv_count"
-            app:layout_constraintStart_toStartOf="@+id/tv_count" />
-
         <ImageButton
-            android:id="@+id/btn_little_pig"
+            android:id="@+id/btnLittlePig"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_marginTop="100dp"
@@ -102,6 +119,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/ivHat"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/hat2"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@+id/btnLittlePig"
+            app:layout_constraintTop_toTopOf="@+id/btnLittlePig" />
+
+        <ImageView
             android:id="@+id/line"
             android:layout_width="2dp"
             android:layout_height="10dp"
@@ -110,7 +137,7 @@
             android:src="@drawable/circle"
             app:layout_constraintEnd_toEndOf="@+id/spider"
             app:layout_constraintStart_toStartOf="@+id/spider"
-            app:layout_constraintTop_toTopOf="@+id/btn_web" />
+            app:layout_constraintTop_toTopOf="@+id/btnWeb" />
 
         <ImageView
             android:id="@+id/spider"
@@ -121,7 +148,7 @@
             android:scaleX="1.1"
             android:scaleY="1.1"
             android:src="@drawable/spider"
-            app:layout_constraintStart_toStartOf="@+id/btn_web"
+            app:layout_constraintStart_toStartOf="@+id/btnWeb"
             app:layout_constraintTop_toBottomOf="@+id/line" />
 
         <ImageView
@@ -133,11 +160,11 @@
             android:scaleType="centerInside"
             android:src="@drawable/onehay"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/feed_hay"
-            app:layout_constraintStart_toStartOf="@+id/feed_hay" />
+            app:layout_constraintBottom_toBottomOf="@+id/feedHay"
+            app:layout_constraintStart_toStartOf="@+id/feedHay" />
 
         <ImageView
-            android:id="@+id/feed_hay"
+            android:id="@+id/feedHay"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_marginStart="10dp"
@@ -146,7 +173,7 @@
             android:src="@drawable/hay"
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_little_pig" />
+            app:layout_constraintTop_toBottomOf="@+id/btnLittlePig" />
 
         <ImageView
             android:id="@+id/seed"
@@ -157,11 +184,11 @@
             android:scaleType="centerInside"
             android:src="@drawable/seed"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/feed_bowl"
-            app:layout_constraintEnd_toEndOf="@+id/feed_bowl" />
+            app:layout_constraintBottom_toBottomOf="@+id/feedBowl"
+            app:layout_constraintEnd_toEndOf="@+id/feedBowl" />
 
         <ImageView
-            android:id="@+id/feed_bowl"
+            android:id="@+id/feedBowl"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="-80dp"
@@ -170,21 +197,21 @@
             android:src="@drawable/feeding"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_little_pig" />
+            app:layout_constraintTop_toBottomOf="@+id/btnLittlePig" />
 
         <ImageView
-            android:id="@+id/feed_bottle"
+            android:id="@+id/feedBottle"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="-10dp"
             android:layout_marginBottom="-10dp"
             android:scaleType="centerInside"
             android:src="@drawable/babybottle"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_little_pig"
-            app:layout_constraintStart_toStartOf="@+id/btn_little_pig" />
+            app:layout_constraintBottom_toBottomOf="@+id/btnLittlePig"
+            app:layout_constraintStart_toStartOf="@+id/btnLittlePig" />
 
         <TextView
-            android:id="@+id/be_friends1"
+            android:id="@+id/beFriends1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
@@ -192,11 +219,11 @@
             android:text="❤️"
             android:textSize="40sp"
             android:visibility="invisible"
-            app:layout_constraintStart_toStartOf="@+id/btn_little_pig"
-            app:layout_constraintTop_toTopOf="@+id/btn_little_pig" />
+            app:layout_constraintStart_toStartOf="@+id/btnLittlePig"
+            app:layout_constraintTop_toTopOf="@+id/btnLittlePig" />
 
         <TextView
-            android:id="@+id/be_friends2"
+            android:id="@+id/beFriends2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
@@ -204,11 +231,25 @@
             android:text="❤️"
             android:textSize="40sp"
             android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@+id/btn_little_pig"
-            app:layout_constraintTop_toTopOf="@+id/btn_little_pig" />
+            app:layout_constraintEnd_toEndOf="@+id/btnLittlePig"
+            app:layout_constraintTop_toTopOf="@+id/btnLittlePig" />
 
         <TextView
-            android:id="@+id/tv_count"
+            android:id="@+id/tvLevelUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="Level Up!"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/tvCount"
+            app:layout_constraintEnd_toEndOf="@+id/tvCount"
+            app:layout_constraintStart_toStartOf="@+id/tvCount" />
+
+        <TextView
+            android:id="@+id/tvCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="윌버🐷에게 먹이를 주세요!"
@@ -216,9 +257,9 @@
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/btn_little_pig"
-            app:layout_constraintEnd_toEndOf="@+id/btn_little_pig"
-            app:layout_constraintStart_toStartOf="@+id/btn_little_pig" />
+            app:layout_constraintBottom_toTopOf="@+id/btnLittlePig"
+            app:layout_constraintEnd_toEndOf="@+id/btnLittlePig"
+            app:layout_constraintStart_toStartOf="@+id/btnLittlePig" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
