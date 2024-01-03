@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -19,7 +20,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -37,6 +37,7 @@ import java.util.Locale
 import java.util.Date
 import java.text.SimpleDateFormat
 import java.io.IOException
+import java.io.OutputStream
 
 class GalleryFragment : Fragment() {
 
@@ -100,12 +101,9 @@ class GalleryFragment : Fragment() {
             currentPhotoUri?.let { uri ->
                 val bitmap = getBitmapFromUri(uri)
 
-                if (bitmap != null) {
-                    if(!imageExternalSave(requireContext(), bitmap, requireContext().getString(R.string.app_name))) {
-                        Toast.makeText(context, "이미지 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    // 비트맵을 가지고 갤러리에 저장
-                }
+                // 저장된 갤러리 경로로 비트맵을 저장
+                bitmap?.let { savePhotoToGallery(it) }
+
                 val newPhoto = Photo(uri.toString())
                 imageList.add(newPhoto)
                 addInPhotoList(newPhoto)
@@ -225,49 +223,49 @@ class GalleryFragment : Fragment() {
         }
     }
 
-    fun imageExternalSave(context: Context, bitmap: Bitmap, path: String): Boolean {
-        val state = Environment.getExternalStorageState()
-        if (Environment.MEDIA_MOUNTED == state) {
+    private fun savePhotoToGallery(bitmap: Bitmap) {
+        // 외부 저장소의 "Pictures" 디렉토리에 사진을 저장할 디렉토리 생성
+        val picturesDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
 
-            val rootPath =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                    .toString()
-            val dirName = "/" + path
-            val fileName = System.currentTimeMillis().toString() + ".png"
-            val savePath = File(rootPath + dirName)
-            savePath.mkdirs()
-
-            val file = File(savePath, fileName)
-            if (file.exists()) file.delete()
-
-            try {
-                val out = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-                out.flush()
-                out.close()
-
-                //갤러리 갱신
-                context.sendBroadcast(
-                    Intent(
-                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        Uri.parse("file://" + Environment.getExternalStorageDirectory())
-                    )
-                )
-
-                return true
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+        if (!picturesDirectory.exists()) {
+            picturesDirectory.mkdirs()
         }
-        return false
+
+        // 파일 이름 생성
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val fileName = "JPEG_${timeStamp}.jpg"
+
+        // 외부 저장소에 파일 생성
+        val externalFile = File(picturesDirectory, fileName)
+
+        try {
+            // 파일에 비트맵을 저장
+            val stream: OutputStream = FileOutputStream(externalFile)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            stream.flush()
+            stream.close()
+
+            // 갤러리 갱신 요청
+            updateGallery(externalFile)
+
+            Toast.makeText(context, "사진이 갤러리에 저장되었습니다.", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Toast.makeText(context, "사진을 저장하는 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    /*fun checkPermission(activity: Activty, permission: String): Boolean {
-        val permissionChecker =
-            ContextCompat.checkSelfPermission(activity.applicationContext, permission)
+    // 갤러리 갱신 요청
+    private fun updateGallery(file: File) {
+        MediaScannerConnection.scanFile(
+            requireContext(),
+            arrayOf(file.absolutePath),
+            arrayOf("image/jpeg")
+        ) { _, uri ->
+            Log.d("MediaScannerConnection", "Scanned $uri")
+        }
+    }
 
-        return true
-    }*/
     private fun getAllImages(callback: (Boolean) -> Unit, onError: (Error) -> Unit) {
         var isget = false
 
@@ -368,20 +366,6 @@ class GalleryFragment : Fragment() {
                 }
             }
         })
-        /*
-        toggleButton.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                recyclerView1.visibility = View.GONE
-                recyclerView2.visibility = View.GONE
-                recyclerView3.visibility = View.GONE
-                viewPager.visibility = View.VISIBLE
-            } else {
-                recyclerView1.visibility = View.VISIBLE
-                recyclerView2.visibility = View.VISIBLE
-                recyclerView3.visibility = View.VISIBLE
-                viewPager.visibility = View.GONE
-            }
-        }*/
     }
 
     private fun addInPhotoList(photo: Photo) {
@@ -395,10 +379,6 @@ class GalleryFragment : Fragment() {
             photoList3.add(photo)
         }
         totalImages += 1
-        for (i in imageList) {
-            Log.w("oldPhoto: ", i.imageURI)
-        }
-        Log.w("newPhoto: ", photo.imageURI)
 
         adapter1.notifyDataSetChanged()
         adapter2.notifyDataSetChanged()
