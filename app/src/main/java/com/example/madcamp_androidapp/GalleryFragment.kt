@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,12 +18,17 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.madcamp_androidapp.GalleryFragment.Companion.READ_EXTERNAL_STORAGE_REQUEST_CODE
 import com.example.madcamp_androidapp.databinding.FragmentGalleryBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
+import java.util.Locale
+import java.util.Date
+import java.text.SimpleDateFormat
 
 class GalleryFragment : Fragment() {
 
@@ -41,6 +47,7 @@ class GalleryFragment : Fragment() {
     private lateinit var adapter2: PhotoAdapter
     private lateinit var adapter3: PhotoAdapter
     private var totalImages = 0
+    private var currentPhotoUri: Uri? = null
 
     // 권한 허용 알림창에서 허용/거부 버튼을 누른 직후 동작 관련 부분
     private val checkPermission = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
@@ -68,30 +75,29 @@ class GalleryFragment : Fragment() {
         }
     }
 
-    private val cameraLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == RESULT_OK && it.data != null) {
+    private val requestCameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            takePhoto()
+        } else {
+            Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private val cameraLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
             // 사진 찍기 성공
-            Toast.makeText(context, "사진 찍기 성공", Toast.LENGTH_SHORT).show()
-            Log.w("check3:", "check3")
+            Toast.makeText(context, "사진이 갤러리에 저장되었습니다.", Toast.LENGTH_SHORT).show()
 
-            // 찍은 사진을 imageList에 추가
-            val lastPhotoUri = getLastTakenPhotoUri()
-            Log.w("check1:", "check1")
-            if (lastPhotoUri != null) {
-                Log.w("check2:", "check2")
-                val newPhoto = Photo(lastPhotoUri.toString())
+            // Uri 가져오기
+            currentPhotoUri?.let { uri ->
+                val newPhoto = Photo(uri.toString())
                 imageList.add(newPhoto)
-
                 addInPhotoList(newPhoto)
-                Log.w("uri: ", newPhoto.imageURI)
-
-                // RecyclerView 갱신
                 connectAdapter()
-
             }
         } else {
             // 사진 찍기 실패
-            Toast.makeText(context, "사진 찍기 실패", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "사진 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -108,11 +114,29 @@ class GalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val cameraButton = binding.cameraButton
+        // 카메라 버튼을 눌렀을 때의 동작
         cameraButton.setOnClickListener {
-            takePhoto()
+            checkCameraPermissionAndTakePhoto()
         }
 
         checkPermission.launch(permissionList)
+    }
+
+    private fun checkCameraPermissionAndTakePhoto() {
+        // 카메라 권한이 있는지 확인
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                // 이미 권한이 있는 경우
+                takePhoto()
+            }
+            else -> {
+                // 권한이 없는 경우 권한 요청
+                requestCameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+            }
+        }
     }
 
     // 권한 허용 여부 알림창이 나타나지 않은 경우에 대한 처리
@@ -147,43 +171,31 @@ class GalleryFragment : Fragment() {
         }
     }
 
+    // 사진을 찍기 위해 기본 설정을 하는 함수
     private fun takePhoto() {
-        if (ContextCompat.checkSelfPermission(
+        val intent: Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+        // 새로운 파일을 만들어 Uri 저장
+        val photoFile: File? = createImageFile()
+        photoFile?.also {
+            val photoUri: Uri = FileProvider.getUriForFile(
                 requireContext(),
-                android.Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            Log.w("cameraLauncher call!", "ok")
-            val intent: Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                "com.example.madcamp_androidapp.fileprovider",
+                it
+            )
+            currentPhotoUri = photoUri
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+            // 카메라 실행
             cameraLauncher.launch(intent)
-        } else {
-            // 카메라 권한이 없는 경우
-            Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun getLastTakenPhotoUri(): Uri? {
-        val projection = arrayOf(MediaStore.Images.Media._ID)
-        val cursor = requireActivity().contentResolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            projection,
-            null,
-            null,
-            MediaStore.Images.Media.DATE_TAKEN + " DESC"
-        )
-
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-                val imageId = it.getLong(idColumn)
-                return Uri.withAppendedPath(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    imageId.toString()
-                )
-            }
-        }
-
-        return null
+    // 파일을 만들어 Uri 반환
+    private fun createImageFile(): File? {
+        // 파일 이름 생성
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File? = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
     }
 
     private fun getAllImages(callback: (Boolean) -> Unit, onError: (Error) -> Unit) {

@@ -102,6 +102,7 @@ class PhoneFragment : Fragment() {
                             } else {
                                 // 02로 시작하지도 않고 10자리도 아니면
                                 // (즉 02로 시작하지 않는 9자리면) 그냥 그대로
+                                parsingNum = newnum
                             }
                         } else if (numlength == 11) {
                             // 일반 전화번호, 또는 02를 제외한 지역번호
