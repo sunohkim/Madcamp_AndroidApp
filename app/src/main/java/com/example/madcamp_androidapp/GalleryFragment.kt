@@ -22,6 +22,8 @@ import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.madcamp_androidapp.GalleryFragment.Companion.READ_EXTERNAL_STORAGE_REQUEST_CODE
 import com.example.madcamp_androidapp.databinding.FragmentGalleryBinding
+import com.github.angads25.toggle.interfaces.OnToggledListener
+import com.github.angads25.toggle.model.ToggleableView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -283,6 +285,22 @@ class GalleryFragment : Fragment() {
 
         // 토글 버튼에 따라 보이는 화면 전환
         val toggleButton = binding.toggleButton
+        toggleButton.setOnToggledListener(object : OnToggledListener {
+            override fun onSwitched(toggleableView: ToggleableView, isOn: Boolean) {
+                if (isOn) {
+                    recyclerView1.visibility = View.VISIBLE
+                    recyclerView2.visibility = View.VISIBLE
+                    recyclerView3.visibility = View.VISIBLE
+                    viewPager.visibility = View.GONE
+                } else {
+                    recyclerView1.visibility = View.GONE
+                    recyclerView2.visibility = View.GONE
+                    recyclerView3.visibility = View.GONE
+                    viewPager.visibility = View.VISIBLE
+                }
+            }
+        })
+        /*
         toggleButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 recyclerView1.visibility = View.GONE
@@ -295,7 +313,7 @@ class GalleryFragment : Fragment() {
                 recyclerView3.visibility = View.VISIBLE
                 viewPager.visibility = View.GONE
             }
-        }
+        }*/
     }
 
     private fun addInPhotoList(photo: Photo) {
