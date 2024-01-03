@@ -1,4 +1,4 @@
-<img src="https://capsule-render.vercel.app/api?type=soft&color=F5A9E1&height=100&section=header&text=윌버%20키우기&fontSize=50&fontColor=FFFFFF />
+<img src="https://capsule-render.vercel.app/api?type=soft&color=F5A9E1&height=80&section=header&text=🐷윌버%20키우기🐷&fontSize=50&fontColor=FFFFFF"/>
 
 
 # 윌버 키우기
