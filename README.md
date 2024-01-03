@@ -28,6 +28,7 @@
 ---
 
 ### ☎️ TAP1: Contact
+![전화번호부](https://github.com/sunohkim/Madcamp_AndroidApp/assets/112535704/ccade6b6-da92-4740-b9a2-e47c0c888a58)
 ***Main Features***
 - 안드로이드 기기로부터 연락처 데이터를 불러와 이름, 전화번호의 형식으로 나열되게 만들었습니다.
 - 연락처는 가나다 순으로 정렬되어 있습니다.
@@ -46,6 +47,7 @@
 ---
 
 ### 🖼️ TAP2: Gallery
+![갤러리](https://github.com/sunohkim/Madcamp_AndroidApp/assets/112535704/ee1bc291-7408-4d5a-9a8b-df6b28034848)
 ***Main Features***
 - 안드로이드 기기로부터 사진 데이터를 불러와 Pinterest 형태(모든 사진의 가로 길이 동일, 사진 별 비율 유지)로 배열하였습니다.
 - 화면 우상단의 카메라 버튼을 누르면 카메라로 연결되어 사진을 찍고 저장할 수 있습니다. <br/>
@@ -61,6 +63,7 @@
 ---
 
 ### 👆 TAP3: Clicker Game
+![클리커](https://github.com/sunohkim/Madcamp_AndroidApp/assets/112535704/eb5ea4a2-278c-421c-be94-c45e70a12bec)
 ***Main Features***
 - 윌버(돼지)를 클릭하면 윌버가 밥을 먹습니다.
 - 밥을 주는 횟수만큼 Coin의 개수가 증가하며, 윌버는 Level Up을 하며 점점 자라게 됩니다.
