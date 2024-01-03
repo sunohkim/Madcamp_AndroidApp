@@ -15,20 +15,20 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="2dp"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/icon_pig_gallery"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:text="갤러리"
                 android:textColor="@color/black"
@@ -36,28 +36,41 @@
                 android:textStyle="bold"
                 android:layout_gravity="center"/>
 
+            <Button
+                android:id="@+id/cameraButton"
+                android:layout_width="36dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_gravity="center"
+                android:backgroundTint="#00FFFFFF"
+                android:foreground="@drawable/camera"
+                android:foregroundTint="@color/darkpink"
+
+                />
+
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="12dp"
                 app:cardCornerRadius="15dp"
                 app:cardElevation="0dp">
 
-                <ToggleButton
-                    android:id="@+id/toggleButton"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:background="@color/pink"
-                    android:elevation="0dp"
-                    android:textOn="스와이프로 보기"
-                    android:textOff="전체로 보기"
-                    android:textSize="14dp"
-                    android:textColor="@color/white"
-                    android:checked="false"
-                    android:layout_gravity="center" />
 
             </androidx.cardview.widget.CardView>
+
+            <com.github.angads25.toggle.widget.LabeledSwitch
+                android:id="@+id/toggleButton"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="12dp"
+                app:colorBorder="@color/darkpink"
+                app:colorOff="@color/brightpink"
+                app:colorOn="@color/pink"
+                app:on="true"
+                app:textOff="스와이프"
+                app:textOn="전체" />
 
         </LinearLayout>
 
