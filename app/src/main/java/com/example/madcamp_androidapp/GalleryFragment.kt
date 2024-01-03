@@ -1,8 +1,11 @@
 package com.example.madcamp_androidapp
 
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +19,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -28,9 +32,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
 import java.util.Locale
 import java.util.Date
 import java.text.SimpleDateFormat
+import java.io.IOException
 
 class GalleryFragment : Fragment() {
 
@@ -92,6 +98,14 @@ class GalleryFragment : Fragment() {
 
             // Uri 가져오기
             currentPhotoUri?.let { uri ->
+                val bitmap = getBitmapFromUri(uri)
+
+                if (bitmap != null) {
+                    if(!imageExternalSave(requireContext(), bitmap, requireContext().getString(R.string.app_name))) {
+                        Toast.makeText(context, "이미지 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    // 비트맵을 가지고 갤러리에 저장
+                }
                 val newPhoto = Photo(uri.toString())
                 imageList.add(newPhoto)
                 addInPhotoList(newPhoto)
@@ -200,6 +214,60 @@ class GalleryFragment : Fragment() {
         return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
     }
 
+    private fun getBitmapFromUri(uri: Uri): Bitmap? {
+        return try {
+            // Uri를 사용하여 ContentResolver를 통해 InputStream을 열고, BitmapFactory를 사용하여 Bitmap으로 변환
+            val inputStream = requireContext().contentResolver.openInputStream(uri)
+            BitmapFactory.decodeStream(inputStream)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    fun imageExternalSave(context: Context, bitmap: Bitmap, path: String): Boolean {
+        val state = Environment.getExternalStorageState()
+        if (Environment.MEDIA_MOUNTED == state) {
+
+            val rootPath =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    .toString()
+            val dirName = "/" + path
+            val fileName = System.currentTimeMillis().toString() + ".png"
+            val savePath = File(rootPath + dirName)
+            savePath.mkdirs()
+
+            val file = File(savePath, fileName)
+            if (file.exists()) file.delete()
+
+            try {
+                val out = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                out.flush()
+                out.close()
+
+                //갤러리 갱신
+                context.sendBroadcast(
+                    Intent(
+                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                        Uri.parse("file://" + Environment.getExternalStorageDirectory())
+                    )
+                )
+
+                return true
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return false
+    }
+
+    /*fun checkPermission(activity: Activty, permission: String): Boolean {
+        val permissionChecker =
+            ContextCompat.checkSelfPermission(activity.applicationContext, permission)
+
+        return true
+    }*/
     private fun getAllImages(callback: (Boolean) -> Unit, onError: (Error) -> Unit) {
         var isget = false
 
