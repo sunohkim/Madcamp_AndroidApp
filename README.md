@@ -1,4 +1,4 @@
-<img src="https://capsule-render.vercel.app/api?type=soft&color=F5A9E1&height=100&section=header&text=윌버%20키우기&fontSize="50"&fontColor="FFFFFF" />
+<img src="https://capsule-render.vercel.app/api?type=soft&color=F5A9E1&height=100&section=header&text=윌버%20키우기&fontSize=50&fontColor=FFFFFF />
 
 
 # 윌버 키우기
@@ -18,10 +18,14 @@
 몰입캠프 1주차 안드로이드 앱 제작 프로젝트입니다.
 본 프로젝트는 세 개의 탭으로 구성된 안드로이드 앱 개발을 다루고 있습니다.
 
+---
+
 ### 📱 MainActivity
 ***Main Features***
 - 간단하고 심플한 스플레시 화면을 만들었습니다.
 - 화면 하단의 내비게이션바를 이용해 각 탭의 view로 전환할 수 있습니다.
+
+---
 
 ### ☎️ TAP1: Contact
 ***Main Features***
@@ -39,6 +43,8 @@
   Intent를 이용해 연락처 추가 Activity에서 연락처 목록 Fragment로 신규 입력한 이름, 번호를 불러왔습니다.
 - Adapter와 Binding을 이용해 전화 버튼을 누르면 전화를, 삭제 버튼을 누르면 삭제를 할 수 있도록 구현했습니다.
 
+---
+
 ### 🖼️ TAP2: Gallery
 ***Main Features***
 - 안드로이드 기기로부터 사진 데이터를 불러와 Pinterest 형태(모든 사진의 가로 길이 동일, 사진 별 비율 유지)로 배열하였습니다.
@@ -51,6 +57,8 @@
 - 세 개의 LinearLayout과, 각각의 LinearLayout에 RecyclerView를 적용하여 Pinterest 형태의, 모든 사진의 가로 길이를 통일하고 각 사진 별 비율을 유지하는 view를 만들었습니다.
 - 2개의 Adapter을 이용하여 Pinterest 형태로 사진을 배열하는 view, 한 장씩 스와이프하며 볼 수 있는 view 2개를 모두 구현하였습니다.
 - binding을 이용하여 각 이미지의 URI 정보를 바탕으로 이미지를 출력하였습니다.
+
+---
 
 ### 👆 TAP3: Clicker Game
 ***Main Features***
@@ -66,4 +74,3 @@
 - 수많은 ClickListener과 Handler을 이용해서 클리커 게임의 각 부분을 모두 조절하였습니다.
 - 마켓 버튼을 누르면 모자 가게라는 새로운 Activity가 나타납니다. <br/>
   Intent를 이용해 Fragment와 Activity간 데이터를 주고 받았습니다.
-- 
