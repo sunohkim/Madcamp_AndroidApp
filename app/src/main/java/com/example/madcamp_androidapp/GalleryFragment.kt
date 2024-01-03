@@ -224,45 +224,35 @@ class GalleryFragment : Fragment() {
     }
 
     private fun savePhotoToGallery(bitmap: Bitmap) {
-        // 외부 저장소의 "Pictures" 디렉토리에 사진을 저장할 디렉토리 생성
-        val picturesDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-
-        if (!picturesDirectory.exists()) {
-            picturesDirectory.mkdirs()
-        }
-
-        // 파일 이름 생성
+        // 현재 타임스탬프를 가져와 이미지 파일 이름으로 사용
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val fileName = "JPEG_${timeStamp}.jpg"
 
-        // 외부 저장소에 파일 생성
-        val externalFile = File(picturesDirectory, fileName)
+        // Pictures 디렉토리에 고유한 이름으로 파일 생성
+        val imageFileName = "JPEG_${timeStamp}_"
+        val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val imageFile = File.createTempFile(imageFileName, ".jpg", storageDir)
 
         try {
-            // 파일에 비트맵을 저장
-            val stream: OutputStream = FileOutputStream(externalFile)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-            stream.flush()
-            stream.close()
+            // 비트맵 데이터를 파일에 쓰기 위한 출력 스트림 생성
+            val fos = FileOutputStream(imageFile)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+            fos.flush()
+            fos.close()
 
-            // 갤러리 갱신 요청
-            updateGallery(externalFile)
+            // 이미지를 기기 갤러리에 추가
+            MediaScannerConnection.scanFile(
+                requireContext(),
+                arrayOf(imageFile.absolutePath),
+                arrayOf("image/jpeg"),
+                null
+            )
 
+            // 사용자에게 사진이 저장되었음을 알림
             Toast.makeText(context, "사진이 갤러리에 저장되었습니다.", Toast.LENGTH_SHORT).show()
         } catch (e: IOException) {
             e.printStackTrace()
-            Toast.makeText(context, "사진을 저장하는 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    // 갤러리 갱신 요청
-    private fun updateGallery(file: File) {
-        MediaScannerConnection.scanFile(
-            requireContext(),
-            arrayOf(file.absolutePath),
-            arrayOf("image/jpeg")
-        ) { _, uri ->
-            Log.d("MediaScannerConnection", "Scanned $uri")
+            // 사진 저장 중 오류가 발생한 경우 사용자에게 알림
+            Toast.makeText(context, "사진 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
